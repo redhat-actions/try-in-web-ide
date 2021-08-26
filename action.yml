@@ -1,0 +1,12 @@
+name: Try in Web IDE
+description: Try in Web IDE
+author: 'Red Hat'
+branding:
+  icon: circle
+  color: red
+
+# inputs:
+# outputs:
+runs:
+  using: node12
+  main: dist/index.js
