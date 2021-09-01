@@ -2,7 +2,12 @@
   "extends": "@redhat-actions/tsconfig",
   "compilerOptions": {
     "rootDir": "src/",
-    "outDir": "out/"
+    "outDir": "out/",
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": false,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
   },
   "include": [
     "src/"
