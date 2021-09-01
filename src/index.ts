@@ -1,7 +1,5 @@
-import * as core from "@actions/core";
+import "reflect-metadata";
+import { setFailed } from "@actions/core";
+import { Main } from "./main";
 
-export async function run(): Promise<void> {
-    core.info("Here we go!");
-}
-
-run().catch(core.setFailed);
+new Main().start().catch(setFailed);
