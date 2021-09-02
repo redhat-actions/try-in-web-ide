@@ -1,10 +1,10 @@
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/rest";
+import { GitHub } from "@actions/github/lib/utils";
 import { injectable } from "inversify";
 
 @injectable()
 export class OctokitBuilder {
-    build(token: string): Octokit {
-        return new github.GitHub(token);
+    build(token: string): InstanceType<typeof GitHub> {
+        return github.getOctokit(token);
     }
 }
