@@ -2,6 +2,7 @@ import { setFailed } from "@actions/core";
 import { inject, injectable } from "inversify";
 import { Octokit } from "@octokit/rest";
 import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 
 @injectable()
 export class AddStatusCheckHelper {
@@ -14,7 +15,7 @@ export class AddStatusCheckHelper {
         targetUrl: string,
         payload: WebhookPayloadPullRequest
     ): Promise<void> {
-        const statusParams: Octokit.ReposCreateStatusParams = {
+        const statusParams: RestEndpointMethodTypes["repos"]["createStatus"]["parameters"] = {
             repo: payload.repository.name,
             owner: payload.repository.owner.login,
             sha: payload.pull_request.head.sha,
