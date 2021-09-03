@@ -5,9 +5,11 @@
 
 GitHub action will add a comment and/or status check with a link to open the project on an online web IDE instance.
 
-#### Adding a link in PR check:
+#### Adding a link in PR status check:
+![Status check screenshot](images/status_check.png)
 
-#### Commenting on Pull Request:
+#### Adding a link in PR comment:
+![Comment screenshot](images/comment.png)
 
 # Usage
 ```yaml
@@ -20,7 +22,7 @@ on:
 
 jobs:
   add-link:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Web IDE Pull Request Check
         id: try-in-web-ide
@@ -29,8 +31,18 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+## Action Inputs
+
+| Input Name | Description | Default |
+| ---------- | ----------- | ------- |
+| `github-token` | GitHub token used to add PR comment and/or status check. | **Must be provided**
+| `add-comment` | If `true`, the action will add comments on each PR with a link to try the PR in Web IDE. | `true`
+| `add-status` | If `true`, the action will add a PR status check on each PR with a link to try the PR in Web IDE. | `true`
+| `web-ide-instance` | The base url for the web IDE instance. | `https://workspaces.openshift.com`
+| `comment-badge` | The badge url for the comment created when `add-comment` is `true`. | `https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940`
+
 # Scenarios
-- [Add comment on pull requests](#add-comment-on-pull-requests)
+- [Disable comment on pull requests](#add-comment-on-pull-requests)
 - [Disable status check on pull requests](#disable-status-check-on-pull-requests)
 - [Customize the link to online Web IDE instance](#customize-the-link-to-online-web-ide-instance)
 
@@ -42,7 +54,7 @@ jobs:
   uses: redhat-actions/try-in-web-ide@main
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
-    add-comment: true
+    add-comment: false
 ```
 
 ## Disable status check on pull requests
