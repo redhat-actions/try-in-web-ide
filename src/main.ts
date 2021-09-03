@@ -12,7 +12,7 @@ export class Main {
         });
         if (!githubToken) {
             throw new Error(
-                `No Github Token provided (${Inputs.GITHUB_TOKEN})`
+                `No GitHub Token provided (${Inputs.GITHUB_TOKEN})`
             );
         }
 

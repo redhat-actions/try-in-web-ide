@@ -1,3 +1,8 @@
-out/
-node_modules/
+coverage
+.intellij
+.eclipse
+.vscode
+node_modules
+dist
+out
 yarn-error.log
