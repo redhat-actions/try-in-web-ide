@@ -19,12 +19,14 @@ export class Main {
         const addComment = core.getInput(Inputs.ADD_COMMENT);
         const addStatus = core.getInput(Inputs.ADD_STATUS);
         const webIdeInstance = core.getInput(Inputs.WEB_IDE_INSTANCE);
+        const commentBadge = core.getInput(Inputs.COMMENT_BADGE);
 
         const inversifyBinbding = new InversifyBinding(
             githubToken,
             addComment === "true",
             addStatus === "true",
-            webIdeInstance
+            webIdeInstance,
+            commentBadge
         );
         const container = inversifyBinbding.initBindings();
         const analysis = container.get(Analysis);

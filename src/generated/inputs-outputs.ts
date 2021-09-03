@@ -3,7 +3,7 @@ export enum Inputs {
     /**
      * If 'true', it will add comments on each PR with a link to try PR with Web IDE
      * Required: false
-     * Default: "false"
+     * Default: "true"
      */
     ADD_COMMENT = "add-comment",
     /**
@@ -13,13 +13,19 @@ export enum Inputs {
      */
     ADD_STATUS = "add-status",
     /**
+     * The link to the badge for the comment created when 'add-comment' is true
+     * Required: false
+     * Default: "https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940"
+     */
+    COMMENT_BADGE = "comment-badge",
+    /**
      * GITHUB token used to add PR check
      * Required: true
      * Default: None.
      */
     GITHUB_TOKEN = "github-token",
     /**
-     * TODO
+     * The base url for th web IDE instance
      * Required: false
      * Default: "https://workspaces.openshift.com"
      */

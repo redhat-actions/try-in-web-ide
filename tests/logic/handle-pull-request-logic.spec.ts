@@ -34,6 +34,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             addStatus: jest.fn(),
 
             webIdeInstance: jest.fn(),
+
+            commentBadge: jest.fn(),
         };
         container.bind(Configuration).toConstantValue(configuration);
 

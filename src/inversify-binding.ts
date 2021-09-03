@@ -17,7 +17,8 @@ export class InversifyBinding {
         private readonly githubToken: string,
         private readonly addComment: boolean,
         private readonly addStatus: boolean,
-        private readonly webIdeInstance: string
+        private readonly webIdeInstance: string,
+        private readonly commentBadge: string,
     ) {}
 
     public initBindings(): Container {
@@ -34,6 +35,7 @@ export class InversifyBinding {
             addComment: () => this.addComment,
             addStatus: () => this.addStatus,
             webIdeInstance: () => this.webIdeInstance,
+            commentBadge: () => this.commentBadge,
         };
         this.container.bind(OctokitBuilder).toSelf().inSingletonScope();
         const writeOctokit = this.container
