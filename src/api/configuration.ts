@@ -5,4 +5,6 @@ export interface Configuration {
     addStatus(): boolean;
 
     webIdeInstance(): string;
+
+    commentBadge(): string;
 }

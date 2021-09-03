@@ -1,8 +1,6 @@
 {
   "extends": "@redhat-actions/tsconfig",
   "compilerOptions": {
-    // "rootDir": "src/",
-    // "rootDirs": ["src/", "tests/"],
     "outDir": "out/",
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,

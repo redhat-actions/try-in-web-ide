@@ -32,9 +32,10 @@ export class HandlePullRequestLogic implements Logic {
             const prBranchName = payload.pull_request.head.ref;
             const repoUrl = payload.pull_request.head.repo.html_url;
             const targetUrl = `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`;
+            const badgeUrl = this.configuration.commentBadge();
 
             if (this.configuration.addComment()) {
-                await this.handleComment(payload, targetUrl);
+                await this.handleComment(payload, targetUrl, badgeUrl);
             }
             if (this.configuration.addStatus()) {
                 await this.handleStatus(payload, targetUrl);
@@ -49,9 +50,10 @@ export class HandlePullRequestLogic implements Logic {
 
     protected async handleComment(
         payload: WebhookPayloadPullRequest,
-        targetUrl: string
+        targetUrl: string,
+        badgeUrl: string,
     ): Promise<void> {
-        const comment = `Try in Web IDE:\n[![Contribute](https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940)](${targetUrl})`;
+        const comment = `Click here to try in Web IDE: [![Contribute](${badgeUrl})](${targetUrl})`;
         await this.addCommentHelper.addComment(comment, payload);
     }
 
@@ -61,7 +63,7 @@ export class HandlePullRequestLogic implements Logic {
     ): Promise<void> {
         const hostname = new URL(targetUrl).hostname;
         await this.addStatusCheckHelper.addStatusCheck(
-            "Open Web IDE",
+            "Open in Web IDE",
             hostname,
             targetUrl,
             payload

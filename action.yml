@@ -12,15 +12,19 @@ inputs:
   add-comment:
     description: If 'true', it will add comments on each PR with a link to try PR with Web IDE
     required: false
-    default: 'false'
+    default: 'true'
   add-status:
     description: If 'true', it will add a PR status check on each PR with a link to try PR with Web IDE
     required: false
     default: 'true'
   web-ide-instance:
-    description: TODO
+    description: The base url for th web IDE instance
     required: false
     default: 'https://workspaces.openshift.com'
+  comment-badge:
+    description: The link to the badge for the comment created when 'add-comment' is true
+    required: false
+    default: 'https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940'
 
 runs:
   using: node12

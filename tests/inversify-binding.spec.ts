@@ -19,12 +19,14 @@ describe("Test InversifyBinding", () => {
         const addComment = true;
         const addStatus = true;
         const cheInstance = "https://foo.com";
+        const badge = "https://badge.com";
 
         const inversifyBinding = new InversifyBinding(
             "foo",
             addComment,
             addStatus,
-            cheInstance
+            cheInstance,
+            badge
         );
         const container: Container = inversifyBinding.initBindings();
 
@@ -51,6 +53,7 @@ describe("Test InversifyBinding", () => {
         expect(configuration.addComment()).toEqual(addComment);
         expect(configuration.addStatus()).toEqual(addStatus);
         expect(configuration.webIdeInstance()).toEqual(cheInstance);
+        expect(configuration.commentBadge()).toEqual(badge);
 
         // helpers
         expect(container.get(AddCommentHelper)).toBeDefined();
