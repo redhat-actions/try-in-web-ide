@@ -81,3 +81,7 @@ After updating `action.yml`, run:
 ```
 npx action-io-generator -o src/generated/inputs-outputs.ts
 ```
+## Running tests
+```
+npm run test
+```

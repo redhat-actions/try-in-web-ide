@@ -15,7 +15,7 @@ export class AddStatusCheckHelper {
         targetUrl: string,
         payload: WebhookPayloadPullRequest
     ): Promise<void> {
-        const statusParams: RestEndpointMethodTypes["repos"]["createStatus"]["parameters"] = {
+        const statusParams: RestEndpointMethodTypes["repos"]["createCommitStatus"]["parameters"] = {
             repo: payload.repository.name,
             owner: payload.repository.owner.login,
             sha: payload.pull_request.head.sha,
@@ -25,6 +25,6 @@ export class AddStatusCheckHelper {
             target_url: targetUrl,
         };
 
-        this.octokit.repos.createStatus(statusParams).catch(setFailed);
+        this.octokit.repos.createCommitStatus(statusParams).catch(setFailed);
     }
 }
