@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Web IDE Pull Request Check
         id: try-in-web-ide
-        uses: redhat-actions/try-in-web-ide@main
+        uses: redhat-actions/try-in-web-ide@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -51,7 +51,7 @@ jobs:
 ```yaml
 - name: Web IDE Pull Request Check
   id: try-in-web-ide
-  uses: redhat-actions/try-in-web-ide@main
+  uses: redhat-actions/try-in-web-ide@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     add_comment: false
@@ -62,7 +62,7 @@ jobs:
 ```yaml
 - name: Web IDE Pull Request Check
   id: try-in-web-ide
-  uses: redhat-actions/try-in-web-ide@main
+  uses: redhat-actions/try-in-web-ide@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     add_status: false
@@ -73,7 +73,7 @@ jobs:
 ```yaml
 - name: Web IDE Pull Request Check
   id: try-in-web-ide
-  uses: redhat-actions/try-in-web-ide@main
+  uses: redhat-actions/try-in-web-ide@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     web_ide_instance: https://my-online-ide-instance.com
