@@ -16,7 +16,7 @@ describe("Test Main", () => {
     test("test missing github token", async () => {
         const main = new Main();
         await expect(main.start()).rejects.toThrow(
-            "No GitHub Token provided (github-token)"
+            "No GitHub Token provided (github_token)"
         );
         expect(core.setFailed).toBeCalledTimes(0);
     });

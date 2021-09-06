@@ -28,18 +28,18 @@ jobs:
         id: try-in-web-ide
         uses: redhat-actions/try-in-web-ide@main
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## Action Inputs
 
 | Input Name | Description | Default |
 | ---------- | ----------- | ------- |
-| `github-token` | GitHub token used to add PR comment and/or status check. | **Must be provided**
-| `add-comment` | If `true`, the action will add comments on each PR with a link to try the PR in Web IDE. | `true`
-| `add-status` | If `true`, the action will add a PR status check on each PR with a link to try the PR in Web IDE. | `true`
-| `web-ide-instance` | The base url for the web IDE instance. | `https://workspaces.openshift.com`
-| `comment-badge` | The badge url for the comment created when `add-comment` is `true`. | `https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940`
+| github_token | GitHub token used to add PR comment and/or status check. | **Must be provided**
+| add_comment | If `true`, the action will add comments on each PR with a link to try the PR in Web IDE. | `true`
+| add_status | If `true`, the action will add a PR status check on each PR with a link to try the PR in Web IDE. | `true`
+| web_ide_instance | The base url for the web IDE instance. | `https://workspaces.openshift.com`
+| comment_badge | The badge url for the comment created when `add_comment` is `true`. | `https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940`
 
 # Scenarios
 - [Disable comment on pull requests](#add-comment-on-pull-requests)
@@ -53,8 +53,8 @@ jobs:
   id: try-in-web-ide
   uses: redhat-actions/try-in-web-ide@main
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    add-comment: false
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    add_comment: false
 ```
 
 ## Disable status check on pull requests
@@ -64,8 +64,8 @@ jobs:
   id: try-in-web-ide
   uses: redhat-actions/try-in-web-ide@main
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    add-status: false
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    add_status: false
 ```
 
 ## Customize the link to online Web IDE instance
@@ -75,8 +75,8 @@ jobs:
   id: try-in-web-ide
   uses: redhat-actions/try-in-web-ide@main
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    che-instance: https://my-online-ide-instance.com
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    web_ide_instance: https://my-online-ide-instance.com
 ```
 
 # Contributing
