@@ -17,6 +17,6 @@ describe("Test Index", () => {
 
         expect(core.setFailed).toBeCalled();
         const call = (core.setFailed as jest.Mock).mock.calls[0];
-        expect(call[0]).toMatch("No GitHub Token provided (github-token)");
+        expect(call[0]).toMatch("No GitHub Token provided (github_token)");
     });
 });
