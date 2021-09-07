@@ -17,7 +17,7 @@ GitHub action will add a comment and/or status check with a link to open the pro
 name: web-ide
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize]
 
 jobs:
