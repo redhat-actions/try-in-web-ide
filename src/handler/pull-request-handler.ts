@@ -12,7 +12,7 @@ export class PullRequestHandler implements Handler {
     protected readonly pullRequestListeners: MultiInjectProvider<PullRequestListener>;
 
     supports(eventName: string): boolean {
-        return eventName === "pull_request";
+        return eventName === "pull_request_target";
     }
 
     async handle(

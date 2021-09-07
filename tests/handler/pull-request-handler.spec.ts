@@ -21,7 +21,7 @@ describe("Test PullRequestHandler", () => {
 
     test("test acceptance (true)", async () => {
         const prHandler: Handler = container.get(Handler);
-        const supports = prHandler.supports("pull_request");
+        const supports = prHandler.supports("pull_request_target");
         expect(supports).toBeTruthy();
     });
 
