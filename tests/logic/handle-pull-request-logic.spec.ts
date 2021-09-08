@@ -124,7 +124,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
         expect(addCommentHelper.addComment).toBeCalled();
         const addCommentCall = (addCommentHelper.addComment as jest.Mock).mock
             .calls[0];
-        expect(addCommentCall[0]).toMatch("Click here to try in Web IDE");
+        expect(addCommentCall[0]).toMatch("Click here to review and test in web IDE");
         expect(addCommentCall[1]).toBe(payload);
 
         expect(addStatusCheckHelper.addStatusCheck).toBeCalledTimes(0);
@@ -169,7 +169,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
         expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
         const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
             .mock.calls[0];
-        expect(addStatusCall[0]).toMatch("Open in Web IDE");
+        expect(addStatusCall[0]).toMatch("Click here to review and test in web IDE");
         expect(addStatusCall[1]).toMatch("foo.com");
         expect(addStatusCall[2]).toMatch(
             "https://foo.com#https://github.com/chetrend/demo-gh-event/tree/patch-2"
