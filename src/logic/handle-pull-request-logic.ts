@@ -53,7 +53,7 @@ export class HandlePullRequestLogic implements Logic {
         targetUrl: string,
         badgeUrl: string,
     ): Promise<void> {
-        const comment = `Click here to try in Web IDE: [![Contribute](${badgeUrl})](${targetUrl})`;
+        const comment = `Click here to review and test in web IDE: [![Contribute](${badgeUrl})](${targetUrl})`;
         await this.addCommentHelper.addComment(comment, payload);
     }
 
@@ -63,7 +63,7 @@ export class HandlePullRequestLogic implements Logic {
     ): Promise<void> {
         const hostname = new URL(targetUrl).hostname;
         await this.addStatusCheckHelper.addStatusCheck(
-            "Open in Web IDE",
+            "Click here to review and test in web IDE",
             hostname,
             targetUrl,
             payload
