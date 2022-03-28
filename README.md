@@ -10,7 +10,7 @@ GitHub action will add a comment and/or status check with a link to open the pro
 
 #### Adding a link in PR comment:
 ![Comment screenshot](images/comment.png)
-
+cool
 # Usage
 ```yaml
 # Add Web IDE link on PRs
