@@ -2,7 +2,7 @@
 
 [![CI Checks](https://github.com/redhat-actions/try-in-web-ide/actions/workflows/ci.yml/badge.svg)](https://github.com/redhat-actions/try-in-web-ide/actions/workflows/ci.yml)
 [![Contribute](https://www.eclipse.org/che/contribute.svg)](https://workspaces.openshift.com#https://github.com/redhat-actions/try-in-web-ide)
-
+not cool
 GitHub action will add a comment and/or status check with a link to open the project on an online web IDE instance.
 
 #### Adding a link in PR status check:
