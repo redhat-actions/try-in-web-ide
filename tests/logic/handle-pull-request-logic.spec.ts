@@ -124,7 +124,9 @@ describe("Test Logic HandlePullRequestLogic", () => {
         expect(addCommentHelper.addComment).toBeCalled();
         const addCommentCall = (addCommentHelper.addComment as jest.Mock).mock
             .calls[0];
-        expect(addCommentCall[0]).toMatch("Click here to review and test in web IDE");
+        expect(addCommentCall[0]).toMatch(
+            "Click here to review and test in web IDE"
+        );
         expect(addCommentCall[1]).toBe(payload);
 
         expect(addStatusCheckHelper.addStatusCheck).toBeCalledTimes(0);
@@ -169,10 +171,120 @@ describe("Test Logic HandlePullRequestLogic", () => {
         expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
         const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
             .mock.calls[0];
-        expect(addStatusCall[0]).toMatch("Click here to review and test in web IDE");
-        expect(addStatusCall[1]).toMatch("foo.com");
-        expect(addStatusCall[2]).toMatch(
-            "https://foo.com#https://github.com/chetrend/demo-gh-event/tree/patch-2"
+        expect(addStatusCall[0]).toMatch(
+            "Click here to review and test in web IDE"
+        );
+        expect(addStatusCall[1]).toBe("foo.com");
+        expect(addStatusCall[2]).toBe(
+            "https://foo.com#https://github.com/chetrend/demo-gh-event/tree/patch-2?remotes={{upstream,https://github.com/benoitf/demo-gh-event.git}}"
+        );
+        expect(addStatusCall[3]).toBe(payload);
+    });
+
+    test("test comment, status", async () => {
+        const handlePullRequestLogic = container.get(HandlePullRequestLogic);
+
+        handlePullRequestLogic.setup();
+
+        // addStatus = true
+        (configuration.addStatus as jest.Mock).mockReturnValue("true");
+        (configuration.webIdeInstance as jest.Mock).mockReturnValue(
+            "https://foo.com"
+        );
+
+        // addComment = true
+        (configuration.addComment as jest.Mock).mockReturnValue("true");
+
+        // check
+        expect(pullRequestAction.registerCallback).toBeCalled();
+        const registerCallbackCall = (pullRequestAction as any).registerCallback
+            .mock.calls[0];
+
+        expect(registerCallbackCall[0]).toEqual(
+            HandlePullRequestLogic.PR_EVENTS
+        );
+        const callback = registerCallbackCall[1];
+
+        const payload: WebhookPayloadPullRequest = await fs.readJSON(
+            path.join(
+                __dirname,
+                "..",
+                "_data",
+                "pull_request",
+                "opened",
+                "create-pr.json"
+            )
+        );
+
+        // call the callback
+        await callback(payload);
+
+        expect(addCommentHelper.addComment).toBeCalled();
+        expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+        const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
+            .mock.calls[0];
+        expect(addStatusCall[0]).toMatch(
+            "Click here to review and test in web IDE"
+        );
+        expect(addStatusCall[1]).toBe("foo.com");
+        expect(addStatusCall[2]).toBe(
+            "https://foo.com#https://github.com/chetrend/demo-gh-event/tree/patch-2?remotes={{upstream,https://github.com/benoitf/demo-gh-event.git}}"
+        );
+        expect(addStatusCall[3]).toBe(payload);
+
+        const addCommentCall = (addCommentHelper.addComment as jest.Mock).mock
+            .calls[0];
+        expect(addCommentCall[0]).toMatch(
+            "Click here to review and test in web IDE"
+        );
+        expect(addCommentCall[1]).toBe(payload);
+    });
+
+    test("test target url when PR branch is located in the same repo as the head branch", async () => {
+        const handlePullRequestLogic = container.get(HandlePullRequestLogic);
+
+        handlePullRequestLogic.setup();
+
+        // addStatus = true
+        (configuration.addStatus as jest.Mock).mockReturnValue("true");
+        (configuration.webIdeInstance as jest.Mock).mockReturnValue(
+            "https://foo.com"
+        );
+
+        // check
+        expect(pullRequestAction.registerCallback).toBeCalled();
+        const registerCallbackCall = (pullRequestAction as any).registerCallback
+            .mock.calls[0];
+
+        expect(registerCallbackCall[0]).toEqual(
+            HandlePullRequestLogic.PR_EVENTS
+        );
+        const callback = registerCallbackCall[1];
+
+        const payload: WebhookPayloadPullRequest = await fs.readJSON(
+            path.join(
+                __dirname,
+                "..",
+                "_data",
+                "pull_request",
+                "opened",
+                "create-pr-source-head-branch-same-repo.json"
+            )
+        );
+
+        // call the callback
+        await callback(payload);
+
+        expect(addCommentHelper.addComment).toBeCalledTimes(0);
+        expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+        const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
+            .mock.calls[0];
+        expect(addStatusCall[0]).toMatch(
+            "Click here to review and test in web IDE"
+        );
+        expect(addStatusCall[1]).toBe("foo.com");
+        expect(addStatusCall[2]).toBe(
+            "https://foo.com#https://github.com/dkwon17/try-in-web-ide-testing/tree/pr-branch"
         );
         expect(addStatusCall[3]).toBe(payload);
     });

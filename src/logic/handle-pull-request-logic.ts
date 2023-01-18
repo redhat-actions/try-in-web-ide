@@ -1,6 +1,10 @@
 import { inject, injectable, postConstruct } from "inversify";
 import { URL } from "url";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import {
+    WebhookPayloadPullRequest,
+    WebhookPayloadPullRequestPullRequestBase,
+    WebhookPayloadPullRequestPullRequestHead,
+} from "@octokit/webhooks";
 import { AddCommentHelper } from "../helpers/add-comment-helper";
 import { AddStatusCheckHelper } from "../helpers/add-status-check-helper";
 import { Configuration } from "../api/configuration";
@@ -29,9 +33,7 @@ export class HandlePullRequestLogic implements Logic {
         const callback = async (
             payload: WebhookPayloadPullRequest
         ): Promise<void> => {
-            const prBranchName = payload.pull_request.head.ref;
-            const repoUrl = payload.pull_request.head.repo.html_url;
-            const targetUrl = `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`;
+            const targetUrl = this.createTargetUrl(payload);
             const badgeUrl = this.configuration.commentBadge();
 
             if (this.configuration.addComment()) {
@@ -46,6 +48,31 @@ export class HandlePullRequestLogic implements Logic {
             HandlePullRequestLogic.PR_EVENTS,
             callback
         );
+    }
+
+    protected createTargetUrl(payload: WebhookPayloadPullRequest): string {
+        const prBranchName = payload.pull_request.head.ref;
+        const repoUrl = payload.pull_request.head.repo.html_url;
+
+        if (
+            this.isSameRepo(
+                payload.pull_request.base,
+                payload.pull_request.head
+            )
+        ) {
+            return `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`;
+        }
+
+        const baseGitUrl = payload.pull_request.base.repo.clone_url;
+        return `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`
+            + `?remotes={{upstream,${baseGitUrl}}}`;
+    }
+
+    protected isSameRepo(
+        baseRepo: WebhookPayloadPullRequestPullRequestBase,
+        headRepo: WebhookPayloadPullRequestPullRequestHead
+    ): boolean {
+        return baseRepo.repo.full_name === headRepo.repo.full_name;
     }
 
     protected async handleComment(
