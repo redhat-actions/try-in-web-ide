@@ -3,6 +3,5 @@ coverage
 .eclipse
 .vscode
 node_modules
-dist
 out
 yarn-error.log
