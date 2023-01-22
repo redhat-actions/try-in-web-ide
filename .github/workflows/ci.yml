@@ -16,6 +16,15 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
+  test:
+    name: Run tests
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm test
+
   check-dist:
     name: Check Distribution
     runs-on: ubuntu-20.04
