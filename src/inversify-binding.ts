@@ -17,6 +17,7 @@ export class InversifyBinding {
         private readonly githubToken: string,
         private readonly addComment: boolean,
         private readonly addStatus: boolean,
+        private readonly setupRemotes: boolean,
         private readonly webIdeInstance: string,
         private readonly commentBadge: string,
     ) {}
@@ -34,6 +35,7 @@ export class InversifyBinding {
         const configuration: Configuration = {
             addComment: () => this.addComment,
             addStatus: () => this.addStatus,
+            setupRemotes: () => this.setupRemotes,
             webIdeInstance: () => this.webIdeInstance,
             commentBadge: () => this.commentBadge,
         };

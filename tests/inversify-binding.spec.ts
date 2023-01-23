@@ -18,6 +18,7 @@ describe("Test InversifyBinding", () => {
     test("test bindings", async () => {
         const addComment = true;
         const addStatus = true;
+        const setupRemotes = false;
         const cheInstance = "https://foo.com";
         const badge = "https://badge.com";
 
@@ -25,6 +26,7 @@ describe("Test InversifyBinding", () => {
             "foo",
             addComment,
             addStatus,
+            setupRemotes,
             cheInstance,
             badge
         );
@@ -52,6 +54,7 @@ describe("Test InversifyBinding", () => {
         expect(configuration).toBeDefined();
         expect(configuration.addComment()).toEqual(addComment);
         expect(configuration.addStatus()).toEqual(addStatus);
+        expect(configuration.setupRemotes()).toEqual(setupRemotes);
         expect(configuration.webIdeInstance()).toEqual(cheInstance);
         expect(configuration.commentBadge()).toEqual(badge);
 

@@ -33,7 +33,10 @@ export class HandlePullRequestLogic implements Logic {
         const callback = async (
             payload: WebhookPayloadPullRequest
         ): Promise<void> => {
-            const targetUrl = this.createTargetUrl(payload);
+            const targetUrl = this.createTargetUrl(
+                payload,
+                this.configuration.setupRemotes()
+            );
             const badgeUrl = this.configuration.commentBadge();
 
             if (this.configuration.addComment()) {
@@ -50,22 +53,25 @@ export class HandlePullRequestLogic implements Logic {
         );
     }
 
-    protected createTargetUrl(payload: WebhookPayloadPullRequest): string {
+    protected createTargetUrl(
+        payload: WebhookPayloadPullRequest,
+        setupRemotes: boolean
+    ): string {
         const prBranchName = payload.pull_request.head.ref;
         const repoUrl = payload.pull_request.head.repo.html_url;
 
-        if (
-            this.isSameRepo(
+        if (setupRemotes
+            && !this.isSameRepo(
                 payload.pull_request.base,
                 payload.pull_request.head
             )
         ) {
-            return `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`;
+            const baseGitUrl = payload.pull_request.base.repo.clone_url;
+            return `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`
+                + `?remotes={{upstream,${baseGitUrl}}}`;
         }
 
-        const baseGitUrl = payload.pull_request.base.repo.clone_url;
-        return `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`
-            + `?remotes={{upstream,${baseGitUrl}}}`;
+        return `${this.configuration.webIdeInstance()}#${repoUrl}/tree/${prBranchName}`;
     }
 
     protected isSameRepo(
@@ -78,7 +84,7 @@ export class HandlePullRequestLogic implements Logic {
     protected async handleComment(
         payload: WebhookPayloadPullRequest,
         targetUrl: string,
-        badgeUrl: string,
+        badgeUrl: string
     ): Promise<void> {
         const comment = `Click here to review and test in web IDE: [![Contribute](${badgeUrl})](${targetUrl})`;
         await this.addCommentHelper.addComment(comment, payload);

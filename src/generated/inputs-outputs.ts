@@ -25,7 +25,15 @@ export enum Inputs {
      */
     GITHUB_TOKEN = "github_token",
     /**
-     * The base url for the web IDE instance
+     * If 'true', the action will automatically configure remotes for the resulting workspace created by the Web IDE.
+     * Automatically configuring the remotes is useful for PRs made from a forked repository to an upstream repository.
+     * The Web IDE must be based on Eclipse Che® 7.60 for this feature.
+     * Required: false
+     * Default: "false"
+     */
+    SETUP_REMOTES = "setup_remotes",
+    /**
+     * The base url for the Web IDE instance
      * Required: false
      * Default: "https://workspaces.openshift.com"
      */
