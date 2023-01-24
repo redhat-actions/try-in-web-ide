@@ -4,6 +4,8 @@ export interface Configuration {
 
     addStatus(): boolean;
 
+    setupRemotes(): boolean;
+
     webIdeInstance(): string;
 
     commentBadge(): string;

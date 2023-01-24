@@ -18,6 +18,7 @@ export class Main {
 
         const addComment = core.getInput(Inputs.ADD_COMMENT);
         const addStatus = core.getInput(Inputs.ADD_STATUS);
+        const setupRemotes = core.getInput(Inputs.SETUP_REMOTES);
         const webIdeInstance = core.getInput(Inputs.WEB_IDE_INSTANCE);
         const commentBadge = core.getInput(Inputs.COMMENT_BADGE);
 
@@ -25,6 +26,7 @@ export class Main {
             githubToken,
             addComment === "true",
             addStatus === "true",
+            setupRemotes === "true",
             webIdeInstance,
             commentBadge
         );
