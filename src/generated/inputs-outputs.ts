@@ -25,8 +25,10 @@ export enum Inputs {
      */
     GITHUB_TOKEN = "github_token",
     /**
-     * If 'true', the action will automatically configure remotes for the resulting workspace created by the Web IDE.
-     * Automatically configuring the remotes is useful for PRs made from a forked repository to an upstream repository.
+     * If 'true', the badge and status check URL created by the action will have Git remotes automatically configured
+     * if the PR branch is located in a fork repo.
+     * The forked repository will be configured to be the 'origin' remote, while the base repo will be configured to be
+     * the `upstream` remote.
      * The Web IDE must be based on Eclipse Che® 7.60 for this feature.
      * Required: false
      * Default: "false"

@@ -19,10 +19,14 @@ inputs:
     default: 'true'
   setup_remotes:
     description: >
-      If 'true', the action will automatically configure remotes for the resulting workspace created by the Web IDE.
+      If 'true', the badge and status check URL created by the action will have Git remotes automatically configured
 
-      Automatically configuring the remotes is useful for PRs made from a forked repository to an upstream repository.
-      
+      if the PR branch is located in a fork repo.
+
+      The forked repository will be configured to be the 'origin' remote, while the base repo will be configured to be
+
+      the `upstream` remote.
+
       The Web IDE must be based on Eclipse Che® 7.60 for this feature.
     required: false
     default: 'false'
