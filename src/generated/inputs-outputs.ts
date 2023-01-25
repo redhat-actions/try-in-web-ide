@@ -27,8 +27,7 @@ export enum Inputs {
     /**
      * If 'true', the badge and status check URL created by the action will have Git remotes automatically configured
      * if the PR branch is located in a fork repo.
-     * The forked repository will be configured to be the 'origin' remote, while the base repo will be configured to be
-     * the `upstream` remote.
+     * The fork repo and the base repo will be configured to be the 'origin' and 'upstream' remote respectively.
      * The Web IDE must be based on Eclipse Che® 7.60 for this feature.
      * Required: false
      * Default: "false"
