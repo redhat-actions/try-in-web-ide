@@ -38,7 +38,8 @@ jobs:
 | github_token | GitHub token used to add PR comment and/or status check. | **Must be provided**
 | add_comment | If `true`, the action will add comments on each PR with a link to try the PR in Web IDE. | `true`
 | add_status | If `true`, the action will add a PR status check on each PR with a link to try the PR in Web IDE. | `true`
-| web_ide_instance | The base url for the web IDE instance. | `https://workspaces.openshift.com`
+| setup_remotes | If `true`, the badge and status check URL created by the action will have Git remotes automatically configured if the PR branch is located in a fork repo. The fork repo and the base repo will be configured to be the `origin` and `upstream` remote respectively. The Web IDE must be based on Eclipse Che® 7.60 for this feature. | `false`
+| web_ide_instance | The base url for the Web IDE instance. | `https://workspaces.openshift.com`
 | comment_badge | The badge url for the comment created when `add_comment` is `true`. | `https://img.shields.io/badge/Eclipse_Che-Hosted%20by%20Red%20Hat-525C86?logo=eclipse-che&labelColor=FDB940`
 
 # Scenarios
