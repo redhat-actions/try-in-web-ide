@@ -11,12 +11,14 @@ import { AddStatusCheckHelper } from "../../src/helpers/add-status-check-helper"
 import { Configuration } from "../../src/api/configuration";
 import { HandlePullRequestLogic } from "../../src/logic/handle-pull-request-logic";
 import { PullRequestAction } from "../../src/actions/pull-request-action";
+import { UpdateCommentHelper } from "../../src/helpers/update-comment-helper";
 
 describe("Test Logic HandlePullRequestLogic", () => {
     let container: Container;
     let configuration: Configuration;
     let pullRequestAction: PullRequestAction;
     let addCommentHelper: AddCommentHelper;
+    let updateCommentHelper: UpdateCommentHelper;
     let addStatusCheckHelper: AddStatusCheckHelper;
 
     beforeEach(() => {
@@ -45,6 +47,11 @@ describe("Test Logic HandlePullRequestLogic", () => {
             addComment: jest.fn(),
         } as any;
         container.bind(AddCommentHelper).toConstantValue(addCommentHelper);
+
+        updateCommentHelper = {
+            updateComment: jest.fn(),
+        } as any;
+        container.bind(UpdateCommentHelper).toConstantValue(updateCommentHelper);
 
         addStatusCheckHelper = {
             addStatusCheck: jest.fn(),
@@ -99,7 +106,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             handlePullRequestLogic.setup();
 
             // addComment = true
-            (configuration.addComment as jest.Mock).mockReturnValue("true");
+            (configuration.addComment as jest.Mock).mockReturnValue(true);
 
             // check
             expect(pullRequestAction.registerCallback).toBeCalled();
@@ -127,13 +134,67 @@ describe("Test Logic HandlePullRequestLogic", () => {
             expect(addStatusCheckHelper.addStatusCheck).toBeCalledTimes(0);
         });
 
+        test("do not add comment if existing comment is updated", async () => {
+            const handlePullRequestLogic = container.get(HandlePullRequestLogic);
+
+            handlePullRequestLogic.setup();
+
+            // addComment = true
+            (configuration.addComment as jest.Mock).mockReturnValue(true);
+
+            // mock existing comment updated
+            (updateCommentHelper.updateComment as jest.Mock).mockReturnValue(true);
+
+            // check
+            expect(pullRequestAction.registerCallback).toBeCalled();
+            const registerCallbackCall = (pullRequestAction as any).registerCallback
+                .mock.calls[0];
+
+            expect(registerCallbackCall[0]).toEqual(
+                HandlePullRequestLogic.PR_EVENTS
+            );
+            const callback = registerCallbackCall[1];
+
+            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+
+            // call the callback
+            await callback(payload);
+
+            expect(addCommentHelper.addComment).toBeCalledTimes(0);
+        });
+
+        test("do not try to update comment if addComment if false", async () => {
+            const handlePullRequestLogic = container.get(HandlePullRequestLogic);
+
+            handlePullRequestLogic.setup();
+
+            // addComment = false
+            (configuration.addComment as jest.Mock).mockReturnValue(false);
+
+            // check
+            expect(pullRequestAction.registerCallback).toBeCalled();
+            const registerCallbackCall = (pullRequestAction as any).registerCallback
+                .mock.calls[0];
+
+            expect(registerCallbackCall[0]).toEqual(
+                HandlePullRequestLogic.PR_EVENTS
+            );
+            const callback = registerCallbackCall[1];
+
+            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+
+            // call the callback
+            await callback(payload);
+
+            expect(updateCommentHelper.updateComment).toBeCalledTimes(0);
+        });
         test("comment false, status true, setupRemotes false", async () => {
             const handlePullRequestLogic = container.get(HandlePullRequestLogic);
 
             handlePullRequestLogic.setup();
 
             // addStatus = true
-            (configuration.addStatus as jest.Mock).mockReturnValue("true");
+            (configuration.addStatus as jest.Mock).mockReturnValue(true);
             (configuration.webIdeInstance as jest.Mock).mockReturnValue(
                 "https://foo.com"
             );
@@ -173,13 +234,13 @@ describe("Test Logic HandlePullRequestLogic", () => {
             handlePullRequestLogic.setup();
 
             // addStatus = true
-            (configuration.addStatus as jest.Mock).mockReturnValue("true");
+            (configuration.addStatus as jest.Mock).mockReturnValue(true);
             (configuration.webIdeInstance as jest.Mock).mockReturnValue(
                 "https://foo.com"
             );
 
             // addComment = true
-            (configuration.addComment as jest.Mock).mockReturnValue("true");
+            (configuration.addComment as jest.Mock).mockReturnValue(true);
 
             // check
             expect(pullRequestAction.registerCallback).toBeCalled();
@@ -223,9 +284,9 @@ describe("Test Logic HandlePullRequestLogic", () => {
             handlePullRequestLogic.setup();
 
             // addStatus = true
-            (configuration.addStatus as jest.Mock).mockReturnValue("true");
+            (configuration.addStatus as jest.Mock).mockReturnValue(true);
             // setupRemotes = true
-            (configuration.setupRemotes as jest.Mock).mockReturnValue("true");
+            (configuration.setupRemotes as jest.Mock).mockReturnValue(true);
             (configuration.webIdeInstance as jest.Mock).mockReturnValue(
                 "https://foo.com"
             );
@@ -279,7 +340,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             handlePullRequestLogic.setup();
 
             // addStatus = true
-            (configuration.addStatus as jest.Mock).mockReturnValue("true");
+            (configuration.addStatus as jest.Mock).mockReturnValue(true);
             (configuration.webIdeInstance as jest.Mock).mockReturnValue(
                 "https://foo.com"
             );
@@ -319,8 +380,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             handlePullRequestLogic.setup();
 
             // addStatus = true
-            (configuration.addStatus as jest.Mock).mockReturnValue("true");
-            (configuration.setupRemotes as jest.Mock).mockReturnValue("true");
+            (configuration.addStatus as jest.Mock).mockReturnValue(true);
+            (configuration.setupRemotes as jest.Mock).mockReturnValue(true);
             (configuration.webIdeInstance as jest.Mock).mockReturnValue(
                 "https://foo.com"
             );
