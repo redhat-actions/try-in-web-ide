@@ -10,10 +10,13 @@ import { AddStatusCheckHelper } from "../helpers/add-status-check-helper";
 import { Configuration } from "../api/configuration";
 import { Logic } from "../api/logic";
 import { PullRequestAction } from "../actions/pull-request-action";
+import { UpdateCommentHelper } from "../helpers/update-comment-helper";
 
 @injectable()
 export class HandlePullRequestLogic implements Logic {
     public static readonly PR_EVENTS: string[] = [ "opened", "synchronize" ];
+
+    public static readonly MESSAGE_PREFIX = "Click here to review and test in web IDE";
 
     @inject(Configuration)
     private readonly configuration: Configuration;
@@ -26,6 +29,9 @@ export class HandlePullRequestLogic implements Logic {
 
     @inject(AddStatusCheckHelper)
     private readonly addStatusCheckHelper: AddStatusCheckHelper;
+
+    @inject(UpdateCommentHelper)
+    private readonly updateCommentHelper: UpdateCommentHelper;
 
     // Add the given milestone
     @postConstruct()
@@ -86,8 +92,16 @@ export class HandlePullRequestLogic implements Logic {
         targetUrl: string,
         badgeUrl: string
     ): Promise<void> {
-        const comment = `Click here to review and test in web IDE: [![Contribute](${badgeUrl})](${targetUrl})`;
-        await this.addCommentHelper.addComment(comment, payload);
+        const comment = `${HandlePullRequestLogic.MESSAGE_PREFIX}: [![Contribute](${badgeUrl})](${targetUrl})`;
+
+        const updatedExisting = await this.updateCommentHelper.updateComment(
+            new RegExp(`^${HandlePullRequestLogic.MESSAGE_PREFIX}.*`),
+            comment, payload
+        );
+
+        if (!updatedExisting) {
+            await this.addCommentHelper.addComment(comment, payload);
+        }
     }
 
     protected async handleStatus(
@@ -96,7 +110,7 @@ export class HandlePullRequestLogic implements Logic {
     ): Promise<void> {
         const hostname = new URL(targetUrl).hostname;
         await this.addStatusCheckHelper.addStatusCheck(
-            "Click here to review and test in web IDE",
+            HandlePullRequestLogic.MESSAGE_PREFIX,
             hostname,
             targetUrl,
             payload

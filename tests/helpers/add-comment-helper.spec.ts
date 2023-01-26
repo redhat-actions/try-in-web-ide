@@ -3,7 +3,7 @@
 import "reflect-metadata";
 
 import { Container } from "inversify";
-import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
 import { WebhookPayloadPullRequest } from "@octokit/webhooks";
 import { AddCommentHelper } from "../../src/helpers/add-comment-helper";
 
