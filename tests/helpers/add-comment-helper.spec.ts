@@ -42,14 +42,11 @@ describe("Test Helper AddCommentHelper", () => {
 
         const comment = "my-comment";
         await addCommentHelper.addComment(comment, payload);
-        expect(octokit.issues.createComment).toBeCalled();
-
-        type IssuesCreateComment = RestEndpointMethodTypes["issues"]["createComment"]["parameters"];
-        const params: IssuesCreateComment = octokit.issues.createComment.mock.calls[0][0];
-
-        expect(params.body).toBe(comment);
-        expect(params.owner).toBe("foo");
-        expect(params.repo).toBe("bar");
-        expect(params.issue_number).toBe(123);
+        expect(octokit.issues.createComment).toBeCalledWith({
+            body: comment,
+            owner: "foo",
+            repo: "bar",
+            issue_number: 123,
+        });
     });
 });

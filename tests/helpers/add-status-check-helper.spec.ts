@@ -54,17 +54,14 @@ describe("Test Helper AddCommentHelper", () => {
             payload
         );
 
-        expect(octokit.repos.createCommitStatus).toBeCalled();
-
-        type ReposCreateStatus = RestEndpointMethodTypes["repos"]["createStatus"]["parameters"];
-        const params: ReposCreateStatus = octokit.repos.createCommitStatus.mock.calls[0][0];
-
-        expect(params.description).toBe(description);
-        expect(params.target_url).toBe(targetUrl);
-        expect(params.context).toBe(context);
-        expect(params.owner).toBe("foo");
-        expect(params.repo).toBe("bar");
-        expect(params.sha).toBe(456);
-        expect(params.state).toBe("success");
+        expect(octokit.repos.createCommitStatus).toBeCalledWith({
+            description,
+            target_url: targetUrl,
+            context,
+            owner: "foo",
+            repo: "bar",
+            sha: 456,
+            state: "success",
+        });
     });
 });
