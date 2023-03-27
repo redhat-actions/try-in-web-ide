@@ -1,5 +1,8 @@
 # try-in-web-ide Changelog
 
+## v1.4
+- [Update the existing comment instead of adding a new one](https://github.com/redhat-actions/try-in-web-ide/issues/13)
+
 ## v1.3
 - Introduce new action input `setup_remotes`
 
