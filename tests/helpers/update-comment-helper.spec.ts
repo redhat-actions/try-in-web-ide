@@ -32,7 +32,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             {
                 id: 1234,
                 user: {
-                    html_url: "https://github.com/apps/github-actions",
+                    type: "Bot",
                 },
                 body: "Hello world!",
             },
@@ -65,14 +65,14 @@ describe("Test Helper UpdateCommentHelper", () => {
             {
                 id: 1234,
                 user: {
-                    html_url: "https://github.com/apps/github-actions",
+                    type: "Bot",
                 },
                 body: "Hello world!",
             },
             {
                 id: 1235,
                 user: {
-                    html_url: "https://github.com/apps/github-actions",
+                    type: "Bot",
                 },
                 body: "Test comment",
             },
@@ -92,19 +92,19 @@ describe("Test Helper UpdateCommentHelper", () => {
         expect(octokit.issues.updateComment).toBeCalledTimes(0);
     });
 
-    test("comment not found due to no comments by GH bot", async () => {
+    test("comment not found due to no comments by bot", async () => {
         const octokit = setComments([
             {
                 id: 1234,
                 user: {
-                    html_url: "https://github.com/apps/other-app",
+                    type: "User",
                 },
                 body: "Hello world!",
             },
             {
                 id: 1235,
                 user: {
-                    html_url: "https://github.com/dkwon17-test-user",
+                    type: "Organization",
                 },
                 body: "Hello world!",
             },
@@ -128,7 +128,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             {
                 id: 1234,
                 user: {
-                    html_url: "https://github.com/apps/github-actions",
+                    type: "Bot",
                 },
                 body: "Hello world!",
             },
@@ -147,19 +147,26 @@ describe("Test Helper UpdateCommentHelper", () => {
         expect(octokit.issues.updateComment).toBeCalledTimes(0);
     });
 
-    test("update existing comment", async () => {
+    test("update the correct existing comment", async () => {
         const octokit = setComments([
             {
                 id: 1234,
                 user: {
-                    html_url: "https://github.com/dkwon17-test-user",
+                    type: "User",
                 },
                 body: "Hello world!",
             },
             {
                 id: 1235,
                 user: {
-                    html_url: "https://github.com/apps/github-actions",
+                    type: "Bot",
+                },
+                body: "Hello world!",
+            },
+            {
+                id: 1236,
+                user: {
+                    type: "Organization",
                 },
                 body: "Hello world!",
             },

@@ -12,8 +12,8 @@ export class UpdateCommentHelper {
     @inject(Octokit)
     private readonly octokit: Octokit;
 
-    private static readonly GH_ACTION_BOT =
-        "https://github.com/apps/github-actions";
+    private static readonly BOT_TYPE =
+        "Bot";
 
     /**
      * Updates a GH comment previously created by the github-actions bot with a new comment
@@ -74,7 +74,7 @@ export class UpdateCommentHelper {
     ): ArrayType<IssuesListCommentsResponseData> | undefined {
         return response.data.find((comment) => {
             return (
-                comment.user.html_url === UpdateCommentHelper.GH_ACTION_BOT
+                comment.user.type === UpdateCommentHelper.BOT_TYPE
                     && searchRegex.test(comment.body)
             );
         });
