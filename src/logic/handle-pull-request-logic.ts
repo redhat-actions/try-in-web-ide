@@ -95,7 +95,7 @@ export class HandlePullRequestLogic implements Logic {
         const comment = `${HandlePullRequestLogic.MESSAGE_PREFIX}: [![Contribute](${badgeUrl})](${targetUrl})`;
 
         const updatedExisting = await this.updateCommentHelper.updateComment(
-            new RegExp(`^${HandlePullRequestLogic.MESSAGE_PREFIX}.*`),
+            new RegExp(`^${HandlePullRequestLogic.MESSAGE_PREFIX}.*$`),
             comment, payload
         );
 

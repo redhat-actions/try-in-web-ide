@@ -40,7 +40,7 @@ describe("Test Helper UpdateCommentHelper", () => {
         container.bind(Octokit).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
         await updateCommentHelper.updateComment(
-            /^(Hello world)*./g,
+            /^(Hello world)*.$/,
             "my new comment",
             payload
         );
@@ -83,38 +83,7 @@ describe("Test Helper UpdateCommentHelper", () => {
         // regex does not match comment body
         await expect(
             updateCommentHelper.updateComment(
-                /^(regex does not match).*/g,
-                "my comment",
-                payload
-            )
-        ).resolves.toBe(false);
-
-        expect(octokit.issues.updateComment).toBeCalledTimes(0);
-    });
-
-    test("comment not found due to no comments by bot", async () => {
-        const octokit = setComments([
-            {
-                id: 1234,
-                user: {
-                    type: "User",
-                },
-                body: "Hello world!",
-            },
-            {
-                id: 1235,
-                user: {
-                    type: "Organization",
-                },
-                body: "Hello world!",
-            },
-        ]);
-        container.bind(Octokit).toConstantValue(octokit);
-        const updateCommentHelper = container.get(UpdateCommentHelper);
-
-        await expect(
-            updateCommentHelper.updateComment(
-                /^(Hello world)*./g,
+                /^(regex does not match).*$/,
                 "my comment",
                 payload
             )
@@ -138,7 +107,7 @@ describe("Test Helper UpdateCommentHelper", () => {
 
         await expect(
             updateCommentHelper.updateComment(
-                /^(Hello world)*./g,
+                /^(Hello world)*.$/,
                 "Hello world!", // same comment content
                 payload
             )
@@ -147,13 +116,14 @@ describe("Test Helper UpdateCommentHelper", () => {
         expect(octokit.issues.updateComment).toBeCalledTimes(0);
     });
 
-    test("update the correct existing comment", async () => {
+    test("update the earliest matching comment", async () => {
         const octokit = setComments([
             {
                 id: 1234,
                 user: {
                     type: "User",
                 },
+                created_at: "2022-05-09T19:54:41Z",
                 body: "Hello world!",
             },
             {
@@ -161,6 +131,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 user: {
                     type: "Bot",
                 },
+                created_at: "2022-05-09T19:54:41Z",
                 body: "Hello world!",
             },
             {
@@ -168,6 +139,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 user: {
                     type: "Organization",
                 },
+                created_at: "2022-06-09T19:54:41Z",
                 body: "Hello world!",
             },
         ]);
@@ -176,7 +148,45 @@ describe("Test Helper UpdateCommentHelper", () => {
 
         await expect(
             updateCommentHelper.updateComment(
-                /^(Hello world)*./g,
+                /^(Hello world)*.$/,
+                "Hello world!!!!!", // different comment content
+                payload
+            )
+        ).resolves.toBe(true);
+
+        expect(octokit.issues.updateComment).toBeCalledWith({
+            comment_id: 1234,
+            owner: payload.repository.owner.login,
+            repo: payload.repository.name,
+            body: "Hello world!!!!!",
+        });
+    });
+
+    test("update the earliset matching comment 2", async () => {
+        const octokit = setComments([
+            {
+                id: 1234,
+                user: {
+                    type: "User",
+                },
+                created_at: "2023-05-09T19:54:41Z",
+                body: "Hello world!",
+            },
+            {
+                id: 1235,
+                user: {
+                    type: "Organization",
+                },
+                created_at: "2023-04-09T19:54:41Z",
+                body: "Hello world!",
+            },
+        ]);
+        container.bind(Octokit).toConstantValue(octokit);
+        const updateCommentHelper = container.get(UpdateCommentHelper);
+
+        await expect(
+            updateCommentHelper.updateComment(
+                /^(Hello world)*.$/,
                 "Hello world!!!!!", // different comment content
                 payload
             )
@@ -184,6 +194,44 @@ describe("Test Helper UpdateCommentHelper", () => {
 
         expect(octokit.issues.updateComment).toBeCalledWith({
             comment_id: 1235,
+            owner: payload.repository.owner.login,
+            repo: payload.repository.name,
+            body: "Hello world!!!!!",
+        });
+    });
+
+    test("update the earliset matching comment 3", async () => {
+        const octokit = setComments([
+            {
+                id: 1234,
+                user: {
+                    type: "User",
+                },
+                created_at: "2023-05-09T19:54:41Z",
+                body: "Hello world!",
+            },
+            {
+                id: 1235,
+                user: {
+                    type: "Organization",
+                },
+                created_at: "2023-04-09T19:54:41Z",
+                body: "A different comment",
+            },
+        ]);
+        container.bind(Octokit).toConstantValue(octokit);
+        const updateCommentHelper = container.get(UpdateCommentHelper);
+
+        await expect(
+            updateCommentHelper.updateComment(
+                /^(Hello world)*.$/,
+                "Hello world!!!!!", // different comment content
+                payload
+            )
+        ).resolves.toBe(true);
+
+        expect(octokit.issues.updateComment).toBeCalledWith({
+            comment_id: 1234,
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
             body: "Hello world!!!!!",
@@ -203,7 +251,7 @@ describe("Test Helper UpdateCommentHelper", () => {
         const updateCommentHelper = container.get(UpdateCommentHelper);
         await expect(
             updateCommentHelper.updateComment(
-                /^(Hello world)*./g,
+                /^(Hello world)*.$/,
                 "Hello world!",
                 payload
             )
