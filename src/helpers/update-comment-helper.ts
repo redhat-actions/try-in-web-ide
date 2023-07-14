@@ -12,11 +12,8 @@ export class UpdateCommentHelper {
     @inject(Octokit)
     private readonly octokit: Octokit;
 
-    private static readonly BOT_TYPE =
-        "Bot";
-
     /**
-     * Updates a GH comment previously created by the github-actions bot with a new comment
+     * Updates a GH comment with a new comment if needed
      *
      * @param searchRegex regex used to determine which comment to edit
      * @param comment the new comment content
@@ -72,12 +69,26 @@ export class UpdateCommentHelper {
         response: RestEndpointMethodTypes["issues"]["listComments"]["response"],
         searchRegex: RegExp
     ): ArrayType<IssuesListCommentsResponseData> | undefined {
-        return response.data.find((comment) => {
-            return (
-                comment.user.type === UpdateCommentHelper.BOT_TYPE
-                    && searchRegex.test(comment.body)
-            );
+        const matches = response.data.filter((comment) => {
+            return searchRegex.test(comment.body);
         });
+        // comments are sorted by ascending id
+        return this.getEarliestComment(matches);
+    }
+
+    private getEarliestComment(
+        comments: IssuesListCommentsResponseData
+    ): ArrayType<IssuesListCommentsResponseData> | undefined {
+        if (comments.length === 0) {
+            return undefined;
+        }
+        let earliest = comments[0];
+        for (let i = 1; i < comments.length; i++) {
+            if (new Date(comments[i].created_at) < new Date(earliest.created_at)) {
+                earliest = comments[i];
+            }
+        }
+        return earliest;
     }
 
     private async updateCommentById(
