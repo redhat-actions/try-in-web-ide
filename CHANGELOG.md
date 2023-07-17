@@ -1,5 +1,8 @@
 # try-in-web-ide Changelog
 
+## v1.4.2
+- [Try to update earliest matching comment](https://github.com/redhat-actions/try-in-web-ide/pull/37)
+
 ## v1.4.1
 - [Allow detecting and updating existing badge comments made by bots other than the github-actions bot](https://github.com/redhat-actions/try-in-web-ide/pull/29)
 
