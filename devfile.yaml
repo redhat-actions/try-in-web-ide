@@ -1,0 +1,40 @@
+schemaVersion: 2.2.0
+metadata:
+  name: try-in-web-ide
+components:
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      mountSources: true
+      memoryLimit: 4Gi
+commands:
+  - id: install-dependencies
+    exec:
+      label: "Install dependencies"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "npm i"
+  - id: run-linter
+    exec:
+      label: "Run linter"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "npm run lint"
+  - id: bundle
+    exec:
+      label: "Bundle (generate dist folder)"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "npm run bundle"
+  - id: run-tests
+    exec:
+      label: "Run tests"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "npm run test"
+  - id: update-action-input-output
+    exec:
+      label: "Update GitHub action's inputs and outputs"
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: "npx action-io-generator -o src/generated/inputs-outputs.ts"
