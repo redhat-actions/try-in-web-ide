@@ -1,7 +1,8 @@
 coverage
 .intellij
 .eclipse
-.vscode
+.vscode/*
+!.vscode/extensions.json
 node_modules
 out
 yarn-error.log
