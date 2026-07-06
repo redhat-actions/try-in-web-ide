@@ -9,19 +9,19 @@ on:
 
 jobs:
   crda-scan:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: Scan project vulnerability with CRDA
     steps:
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
-          node-version: '16'
+          node-version: '24'
 
       - name: Install CRDA
-        uses: redhat-actions/openshift-tools-installer@v1
+        uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 # v1
         with:
           source: github
           github_pat: ${{ github.token }}
@@ -29,7 +29,7 @@ jobs:
 
       - name: CRDA Scan
         id: scan
-        uses: redhat-actions/crda@v1
+        uses: redhat-actions/crda@6310ee94a6ac8f76b4152b7267c6cd7f1277052c # v1
         with:
           crda_key: ${{ secrets.CRDA_KEY }}
           fail_on: never
