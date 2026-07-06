@@ -1,19 +1,18 @@
-import { setFailed } from "@actions/core";
 import { inject, injectable } from "inversify";
-import { Octokit } from "@octokit/rest";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
 import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
+import { PullRequestPayload } from "../types/pull-request-payload";
+import { OctokitToken, type OctokitInstance } from "../github/octokit-builder";
 
 @injectable()
 export class AddStatusCheckHelper {
-    @inject(Octokit)
-    private readonly octokit: Octokit;
+    @inject(OctokitToken)
+    private readonly octokit: OctokitInstance;
 
     public async addStatusCheck(
         description: string,
         context: string,
         targetUrl: string,
-        payload: WebhookPayloadPullRequest
+        payload: PullRequestPayload
     ): Promise<void> {
         const statusParams: RestEndpointMethodTypes["repos"]["createCommitStatus"]["parameters"] = {
             repo: payload.repository.name,
@@ -25,6 +24,6 @@ export class AddStatusCheckHelper {
             target_url: targetUrl,
         };
 
-        this.octokit.repos.createCommitStatus(statusParams).catch(setFailed);
+        await this.octokit.rest.repos.createCommitStatus(statusParams);
     }
 }

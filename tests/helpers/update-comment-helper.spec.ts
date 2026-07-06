@@ -3,12 +3,12 @@
 import "reflect-metadata";
 
 import { Container } from "inversify";
-import { Octokit } from "@octokit/rest";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import { PullRequestPayload } from "../../src/types/pull-request-payload";
+import { OctokitToken } from "../../src/github/octokit-builder";
 import { UpdateCommentHelper } from "../../src/helpers/update-comment-helper";
 
 describe("Test Helper UpdateCommentHelper", () => {
-    const payload: WebhookPayloadPullRequest = {
+    const payload: PullRequestPayload = {
         pull_request: {
             number: 1,
         },
@@ -37,7 +37,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 body: "Hello world!",
             },
         ]);
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
         await updateCommentHelper.updateComment(
             /^(Hello world)*.$/,
@@ -45,13 +45,13 @@ describe("Test Helper UpdateCommentHelper", () => {
             payload
         );
 
-        expect(octokit.issues.listComments).toBeCalledWith({
+        expect(octokit.rest.issues.listComments).toHaveBeenCalledWith({
             issue_number: 1,
             owner: "foo",
             repo: "bar",
         });
 
-        expect(octokit.issues.updateComment).toBeCalledWith({
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledWith({
             comment_id: 1234,
             owner: "foo",
             repo: "bar",
@@ -77,7 +77,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 body: "Test comment",
             },
         ]);
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
 
         // regex does not match comment body
@@ -89,7 +89,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             )
         ).resolves.toBe(false);
 
-        expect(octokit.issues.updateComment).toBeCalledTimes(0);
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledTimes(0);
     });
 
     test("comment body is the same as new comment content", async () => {
@@ -102,7 +102,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 body: "Hello world!",
             },
         ]);
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
 
         await expect(
@@ -113,7 +113,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             )
         ).resolves.toBe(true);
 
-        expect(octokit.issues.updateComment).toBeCalledTimes(0);
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledTimes(0);
     });
 
     test("update the earliest matching comment", async () => {
@@ -143,7 +143,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 body: "Hello world!",
             },
         ]);
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
 
         await expect(
@@ -154,7 +154,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             )
         ).resolves.toBe(true);
 
-        expect(octokit.issues.updateComment).toBeCalledWith({
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledWith({
             comment_id: 1234,
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
@@ -181,7 +181,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 body: "Hello world!",
             },
         ]);
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
 
         await expect(
@@ -192,7 +192,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             )
         ).resolves.toBe(true);
 
-        expect(octokit.issues.updateComment).toBeCalledWith({
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledWith({
             comment_id: 1235,
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
@@ -219,7 +219,7 @@ describe("Test Helper UpdateCommentHelper", () => {
                 body: "A different comment",
             },
         ]);
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
 
         await expect(
@@ -230,7 +230,7 @@ describe("Test Helper UpdateCommentHelper", () => {
             )
         ).resolves.toBe(true);
 
-        expect(octokit.issues.updateComment).toBeCalledWith({
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledWith({
             comment_id: 1234,
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
@@ -240,14 +240,16 @@ describe("Test Helper UpdateCommentHelper", () => {
 
     test("failed to retrieve comment", async () => {
         const octokit: any = {
-            issues: {
-                listComments: jest.fn((_: any) => {
-                    return Promise.reject(new Error("Error!"));
-                }),
-                updateComment: jest.fn(),
+            rest: {
+                issues: {
+                    listComments: jest.fn((_: any) => {
+                        return Promise.reject(new Error("Error!"));
+                    }),
+                    updateComment: jest.fn(),
+                },
             },
         };
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const updateCommentHelper = container.get(UpdateCommentHelper);
         await expect(
             updateCommentHelper.updateComment(
@@ -257,20 +259,22 @@ describe("Test Helper UpdateCommentHelper", () => {
             )
         ).resolves.toBe(false);
 
-        expect(octokit.issues.updateComment).toBeCalledTimes(0);
+        expect(octokit.rest.issues.updateComment).toHaveBeenCalledTimes(0);
     });
 
     function setComments(comments: any[]): any {
         const octokit: any = {
-            issues: {
-                listComments: jest.fn((_: any) => {
-                    return Promise.resolve({
-                        data: comments,
-                    });
-                }),
-                updateComment: jest.fn((_: any) => {
-                    return Promise.resolve({ status: 200 });
-                }),
+            rest: {
+                issues: {
+                    listComments: jest.fn((_: any) => {
+                        return Promise.resolve({
+                            data: comments,
+                        });
+                    }),
+                    updateComment: jest.fn((_: any) => {
+                        return Promise.resolve({ status: 200 });
+                    }),
+                },
             },
         };
         return octokit;

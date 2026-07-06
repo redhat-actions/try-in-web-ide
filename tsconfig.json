@@ -2,6 +2,8 @@
   "extends": "@redhat-actions/tsconfig",
   "compilerOptions": {
     "outDir": "out/",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "noUnusedLocals": false,

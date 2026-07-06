@@ -1,6 +1,5 @@
 import { inject, injectable, named } from "inversify";
-import { WebhookPayload } from "@actions/github/lib/interfaces";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import { PullRequestPayload } from "../types/pull-request-payload";
 import { Handler } from "../api/handler";
 import { MultiInjectProvider } from "../api/multi-inject-provider";
 import { PullRequestListener } from "../api/pull-request-listener";
@@ -17,12 +16,13 @@ export class PullRequestHandler implements Handler {
 
     async handle(
         _eventName: string,
-        webhookPayLoad: WebhookPayload
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        webhookPayLoad: Record<string, any>
     ): Promise<void> {
         //
 
         // cast payload
-        const prPayLoad = webhookPayLoad as WebhookPayloadPullRequest;
+        const prPayLoad = webhookPayLoad as PullRequestPayload;
 
         await Promise.all(
             this.pullRequestListeners

@@ -1,10 +1,6 @@
 import { inject, injectable, postConstruct } from "inversify";
 import { URL } from "url";
-import {
-    WebhookPayloadPullRequest,
-    WebhookPayloadPullRequestPullRequestBase,
-    WebhookPayloadPullRequestPullRequestHead,
-} from "@octokit/webhooks";
+import { PullRequestPayload, PullRequestRef } from "../types/pull-request-payload";
 import { AddCommentHelper } from "../helpers/add-comment-helper";
 import { AddStatusCheckHelper } from "../helpers/add-status-check-helper";
 import { Configuration } from "../api/configuration";
@@ -36,7 +32,7 @@ export class HandlePullRequestLogic implements Logic {
     @postConstruct()
     public setup(): void {
         const callback = async (
-            payload: WebhookPayloadPullRequest
+            payload: PullRequestPayload
         ): Promise<void> => {
             const targetUrl = this.createTargetUrl(
                 payload,
@@ -59,7 +55,7 @@ export class HandlePullRequestLogic implements Logic {
     }
 
     protected createTargetUrl(
-        payload: WebhookPayloadPullRequest,
+        payload: PullRequestPayload,
         setupRemotes: boolean
     ): string {
         const prBranchName = payload.pull_request.head.ref;
@@ -80,14 +76,14 @@ export class HandlePullRequestLogic implements Logic {
     }
 
     protected isSameRepo(
-        baseRepo: WebhookPayloadPullRequestPullRequestBase,
-        headRepo: WebhookPayloadPullRequestPullRequestHead
+        baseRepo: PullRequestRef,
+        headRepo: PullRequestRef
     ): boolean {
         return baseRepo.repo.full_name === headRepo.repo.full_name;
     }
 
     protected async handleComment(
-        payload: WebhookPayloadPullRequest,
+        payload: PullRequestPayload,
         targetUrl: string,
         badgeUrl: string
     ): Promise<void> {
@@ -95,7 +91,8 @@ export class HandlePullRequestLogic implements Logic {
 
         const updatedExisting = await this.updateCommentHelper.updateComment(
             new RegExp(`^${HandlePullRequestLogic.MESSAGE_PREFIX}.*$`),
-            comment, payload
+            comment,
+            payload
         );
 
         if (!updatedExisting) {
@@ -104,7 +101,7 @@ export class HandlePullRequestLogic implements Logic {
     }
 
     protected async handleStatus(
-        payload: WebhookPayloadPullRequest,
+        payload: PullRequestPayload,
         targetUrl: string
     ): Promise<void> {
         const hostname = new URL(targetUrl).hostname;

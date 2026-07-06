@@ -5,7 +5,7 @@ import * as fs from "fs-extra";
 import * as path from "path";
 
 import { Container } from "inversify";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import { PullRequestPayload } from "../../src/types/pull-request-payload";
 import { AddCommentHelper } from "../../src/helpers/add-comment-helper";
 import { AddStatusCheckHelper } from "../../src/helpers/add-status-check-helper";
 import { Configuration } from "../../src/api/configuration";
@@ -91,7 +91,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -118,7 +118,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -155,7 +155,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -181,7 +181,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -209,7 +209,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -252,7 +252,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -301,7 +301,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -355,7 +355,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);
@@ -396,7 +396,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             const callback = registerCallbackCall[1];
 
-            const payload: WebhookPayloadPullRequest = await fs.readJSON(payloadPath);
+            const payload: PullRequestPayload = await fs.readJSON(payloadPath);
 
             // call the callback
             await callback(payload);

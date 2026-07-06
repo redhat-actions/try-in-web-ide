@@ -1,9 +1,9 @@
-import { ContainerModule, interfaces } from "inversify";
+import { ContainerModule } from "inversify";
 import { AddCommentHelper } from "./add-comment-helper";
 import { AddStatusCheckHelper } from "./add-status-check-helper";
 import { UpdateCommentHelper } from "./update-comment-helper";
 
-const helpersModule = new ContainerModule((bind: interfaces.Bind) => {
+const helpersModule = new ContainerModule(({ bind }) => {
     bind(AddCommentHelper).toSelf().inSingletonScope();
     bind(AddStatusCheckHelper).toSelf().inSingletonScope();
     bind(UpdateCommentHelper).toSelf().inSingletonScope();

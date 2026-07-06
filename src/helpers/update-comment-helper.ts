@@ -1,16 +1,16 @@
 import { inject, injectable } from "inversify";
-import { Octokit } from "@octokit/rest";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
 import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
 import { setFailed } from "@actions/core";
-import { IssuesListCommentsResponseData } from "@octokit/types";
+import { PullRequestPayload } from "../types/pull-request-payload";
+import { OctokitToken, type OctokitInstance } from "../github/octokit-builder";
 
-type ArrayType<T> = T extends (infer Item)[] ? Item : T;
+type CommentsResponseData = RestEndpointMethodTypes["issues"]["listComments"]["response"]["data"];
+type CommentData = CommentsResponseData[number];
 
 @injectable()
 export class UpdateCommentHelper {
-    @inject(Octokit)
-    private readonly octokit: Octokit;
+    @inject(OctokitToken)
+    private readonly octokit: OctokitInstance;
 
     /**
      * Updates a GH comment with a new comment if needed
@@ -23,7 +23,7 @@ export class UpdateCommentHelper {
     public async updateComment(
         searchRegex: RegExp,
         newComment: string,
-        payload: WebhookPayloadPullRequest
+        payload: PullRequestPayload
     ): Promise<boolean> {
         try {
             const comments = await this.listComments(payload);
@@ -39,12 +39,12 @@ export class UpdateCommentHelper {
                 return true;
             }
 
-            const result = await this.updateCommentById(
+            await this.updateCommentById(
                 comment.id,
                 newComment,
                 payload
             );
-            return result.status === 200;
+            return true;
         }
         catch (e) {
             if (e instanceof Error || typeof e === "string") {
@@ -55,30 +55,30 @@ export class UpdateCommentHelper {
     }
 
     private async listComments(
-        payload: WebhookPayloadPullRequest
+        payload: PullRequestPayload
     ): Promise<RestEndpointMethodTypes["issues"]["listComments"]["response"]> {
         const listCommentParams: RestEndpointMethodTypes["issues"]["listComments"]["parameters"] = {
             issue_number: payload.pull_request.number,
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
         };
-        return this.octokit.issues.listComments(listCommentParams);
+        return this.octokit.rest.issues.listComments(listCommentParams);
     }
 
     private findComment(
         response: RestEndpointMethodTypes["issues"]["listComments"]["response"],
         searchRegex: RegExp
-    ): ArrayType<IssuesListCommentsResponseData> | undefined {
+    ): CommentData | undefined {
         const matches = response.data.filter((comment) => {
-            return searchRegex.test(comment.body);
+            return comment.body != null && searchRegex.test(comment.body);
         });
         // comments are sorted by ascending id
         return this.getEarliestComment(matches);
     }
 
     private getEarliestComment(
-        comments: IssuesListCommentsResponseData
-    ): ArrayType<IssuesListCommentsResponseData> | undefined {
+        comments: CommentsResponseData
+    ): CommentData | undefined {
         if (comments.length === 0) {
             return undefined;
         }
@@ -94,7 +94,7 @@ export class UpdateCommentHelper {
     private async updateCommentById(
         commentId: number,
         comment: string,
-        payload: WebhookPayloadPullRequest
+        payload: PullRequestPayload
     ): Promise<RestEndpointMethodTypes["issues"]["updateComment"]["response"]> {
         const updateCommentParams: RestEndpointMethodTypes["issues"]["updateComment"]["parameters"] = {
             comment_id: commentId,
@@ -102,6 +102,6 @@ export class UpdateCommentHelper {
             repo: payload.repository.name,
             body: comment,
         };
-        return this.octokit.issues.updateComment(updateCommentParams);
+        return this.octokit.rest.issues.updateComment(updateCommentParams);
     }
 }

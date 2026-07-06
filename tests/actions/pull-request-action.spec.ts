@@ -5,7 +5,7 @@ import * as fs from "fs-extra";
 import * as path from "path";
 
 import { Container } from "inversify";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import { PullRequestPayload } from "../../src/types/pull-request-payload";
 import { PullRequestAction } from "../../src/actions/pull-request-action";
 
 describe("Test Action PullRequestAction", () => {
@@ -23,14 +23,14 @@ describe("Test Action PullRequestAction", () => {
     test("test not execute as event is unknown", async () => {
         const pullRequestAction = container.get(PullRequestAction);
 
-        const payload: WebhookPayloadPullRequest = jest.fn() as any;
+        const payload: PullRequestPayload = jest.fn() as any;
 
-        let receivedPayload: WebhookPayloadPullRequest | undefined;
+        let receivedPayload: PullRequestPayload | undefined;
 
         const fooMock: any = { dummyCall: jest.fn() };
         pullRequestAction.registerCallback(
             [ "unknown-event" ],
-            async (_payload: WebhookPayloadPullRequest) => {
+            async (_payload: PullRequestPayload) => {
                 fooMock.dummyCall();
                 receivedPayload = _payload;
             }
@@ -39,7 +39,7 @@ describe("Test Action PullRequestAction", () => {
         // duplicate callback to check we add twice the callbacks
         pullRequestAction.registerCallback(
             [ "unknown-event" ],
-            async (_payload: WebhookPayloadPullRequest) => {
+            async (_payload: PullRequestPayload) => {
                 fooMock.dummyCall();
                 receivedPayload = _payload;
             }
@@ -65,11 +65,11 @@ describe("Test Action PullRequestAction", () => {
             )
         );
 
-        let receivedPayload: WebhookPayloadPullRequest = {} as any;
+        let receivedPayload: PullRequestPayload = {} as any;
         const fooMock: any = { dummyCall: jest.fn() };
         await pullRequestAction.registerCallback(
             [ "opened" ],
-            async (payload: WebhookPayloadPullRequest) => {
+            async (payload: PullRequestPayload) => {
                 fooMock.dummyCall();
                 receivedPayload = payload;
             }
@@ -80,7 +80,7 @@ describe("Test Action PullRequestAction", () => {
         expect(receivedPayload).toBeDefined();
         expect(receivedPayload.repository.name).toEqual("demo-gh-event");
         expect(receivedPayload.repository.owner.login).toEqual("benoitf");
-        expect(receivedPayload.number).toEqual(9);
-        expect(receivedPayload.sender.login).toEqual("chetrend");
+        expect((receivedPayload as any).number).toEqual(9);
+        expect((receivedPayload as any).sender.login).toEqual("chetrend");
     });
 });
