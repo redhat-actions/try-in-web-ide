@@ -1,17 +1,16 @@
 import { inject, injectable } from "inversify";
-import { Octokit } from "@octokit/rest";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
-import { setFailed } from "@actions/core";
 import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods";
+import { PullRequestPayload } from "../types/pull-request-payload";
+import { OctokitToken, type OctokitInstance } from "../github/octokit-builder";
 
 @injectable()
 export class AddCommentHelper {
-    @inject(Octokit)
-    private readonly octokit: Octokit;
+    @inject(OctokitToken)
+    private readonly octokit: OctokitInstance;
 
     public async addComment(
         comment: string,
-        payload: WebhookPayloadPullRequest
+        payload: PullRequestPayload
     ): Promise<void> {
         const createCommentParams: RestEndpointMethodTypes["issues"]["createComment"]["parameters"] = {
             body: comment,
@@ -19,6 +18,6 @@ export class AddCommentHelper {
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
         };
-        this.octokit.issues.createComment(createCommentParams).catch(setFailed);
+        await this.octokit.rest.issues.createComment(createCommentParams);
     }
 }

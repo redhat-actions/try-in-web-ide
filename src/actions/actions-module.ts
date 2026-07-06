@@ -1,8 +1,8 @@
-import { ContainerModule, interfaces } from "inversify";
+import { ContainerModule } from "inversify";
 import { PullRequestAction } from "./pull-request-action";
 import { PullRequestListener } from "../api/pull-request-listener";
 
-const actionsModule = new ContainerModule((bind: interfaces.Bind) => {
+const actionsModule = new ContainerModule(({ bind }) => {
     bind(PullRequestAction).toSelf().inSingletonScope();
     bind(PullRequestListener).toService(PullRequestAction);
 });

@@ -1,9 +1,8 @@
 import { Container } from "inversify";
-import { Octokit } from "@octokit/rest";
 import { Analysis } from "./analysis";
 import { Configuration } from "./api/configuration";
 import { Logic } from "./api/logic";
-import { OctokitBuilder } from "./github/octokit-builder";
+import { OctokitBuilder, OctokitToken } from "./github/octokit-builder";
 import { actionsModule } from "./actions/actions-module";
 import { apisModule } from "./api/apis-module";
 import { handlersModule } from "./handler/handlers-module";
@@ -43,7 +42,7 @@ export class InversifyBinding {
         const writeOctokit = this.container
             .get(OctokitBuilder)
             .build(this.githubToken);
-        this.container.bind(Octokit).toConstantValue(writeOctokit);
+        this.container.bind(OctokitToken).toConstantValue(writeOctokit);
 
         this.container.bind(Configuration).toConstantValue(configuration);
 

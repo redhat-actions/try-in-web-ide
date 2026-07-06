@@ -1,8 +1,7 @@
-import { WebhookPayload } from "@actions/github/lib/interfaces";
-
 export const Handler = Symbol.for("Handler");
 export type Handler = {
     supports(eventName: string): boolean;
 
-    handle(eventName: string, webhookPayLoad: WebhookPayload): Promise<void>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    handle(eventName: string, webhookPayLoad: Record<string, any>): Promise<void>;
 };

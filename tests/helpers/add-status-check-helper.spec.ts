@@ -3,8 +3,8 @@
 import "reflect-metadata";
 
 import { Container } from "inversify";
-import { Octokit } from "@octokit/rest";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
+import { PullRequestPayload } from "../../src/types/pull-request-payload";
+import { OctokitToken } from "../../src/github/octokit-builder";
 import { AddStatusCheckHelper } from "../../src/helpers/add-status-check-helper";
 
 describe("Test Helper AddCommentHelper", () => {
@@ -17,18 +17,19 @@ describe("Test Helper AddCommentHelper", () => {
 
     // check with label existing
     test("test call correct API", async () => {
+        const createCommitStatus = jest.fn().mockResolvedValue(null);
         const octokit: any = {
-            repos: {
-                createCommitStatus: jest.fn().mockImplementation((_: any) => {
-                    return Promise.resolve(null);
-                }),
+            rest: {
+                repos: {
+                    createCommitStatus,
+                },
             },
         };
 
-        container.bind(Octokit).toConstantValue(octokit);
+        container.bind(OctokitToken).toConstantValue(octokit);
         const addStatusCheckHelper = container.get(AddStatusCheckHelper);
 
-        const payload: WebhookPayloadPullRequest = {
+        const payload: PullRequestPayload = {
             pull_request: {
                 head: {
                     sha: 456,
@@ -54,7 +55,7 @@ describe("Test Helper AddCommentHelper", () => {
             payload
         );
 
-        expect(octokit.repos.createCommitStatus).toBeCalledWith({
+        expect(createCommitStatus).toHaveBeenCalledWith({
             description,
             target_url: targetUrl,
             context,

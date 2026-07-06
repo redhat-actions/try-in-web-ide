@@ -1,13 +1,12 @@
 import { injectable } from "inversify";
-import { WebhookPayloadPullRequest } from "@octokit/webhooks";
-import { setFailed } from "@actions/core";
+import { PullRequestPayload } from "../types/pull-request-payload";
 import { PullRequestListener } from "../api/pull-request-listener";
 
 @injectable()
 export class PullRequestAction implements PullRequestListener {
     private readonly pullRequestCallbacks: Map<
         string,
-        Array<(payload: WebhookPayloadPullRequest) => Promise<void>>
+        Array<(payload: PullRequestPayload) => Promise<void>>
     >;
 
     constructor() {
@@ -19,7 +18,7 @@ export class PullRequestAction implements PullRequestListener {
      */
     registerCallback(
         events: string[],
-        callback: (payload: WebhookPayloadPullRequest) => Promise<void>
+        callback: (payload: PullRequestPayload) => Promise<void>
     ): void {
         events.forEach((eventName) => {
             if (!this.pullRequestCallbacks.has(eventName)) {
@@ -30,13 +29,13 @@ export class PullRequestAction implements PullRequestListener {
         });
     }
 
-    async execute(payload: WebhookPayloadPullRequest): Promise<void> {
+    async execute(payload: PullRequestPayload): Promise<void> {
         const eventName = payload.action;
 
         const callbacks = this.pullRequestCallbacks.get(eventName);
         if (callbacks) {
-            for await (const callback of callbacks) {
-                callback(payload).catch(setFailed);
+            for (const callback of callbacks) {
+                await callback(payload);
             }
         }
     }

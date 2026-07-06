@@ -8,7 +8,10 @@ module.exports = {
     ],
 
     rules: {
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "@typescript-eslint/semi": "off",
+        "semi": [ "error" ],
+        "no-empty-function": [ "error", { "allow": [ "constructors" ] } ],
     },
     overrides: [{
         files: ["*.spec.ts"], // test files

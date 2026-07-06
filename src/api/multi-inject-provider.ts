@@ -1,6 +1,5 @@
-import { Container, interfaces } from "inversify";
+import { Container, type Bind, type ServiceIdentifier } from "inversify";
 
-// Use `Record<string, unknown>` instead of `object` due to `@typescript-eslint/ban-types`
 type NonPrimitive = Record<string, unknown>;
 
 export const MultiInjectProvider = Symbol.for("MultiInjectProvider");
@@ -9,43 +8,27 @@ export interface MultiInjectProvider<T extends NonPrimitive> {
 }
 
 class DefaultMultiInjectProvider<T extends NonPrimitive> implements MultiInjectProvider<T> {
-    protected services: T[] | undefined;
-
-    constructor(
-        protected readonly serviceIdentifier: interfaces.ServiceIdentifier<T>,
-        protected readonly container: interfaces.Container
-    ) {}
+    constructor(private readonly services: T[]) {}
 
     getAll(): T[] {
-        if (this.services === undefined) {
-            const currentServices: T[] = [];
-            if (this.container.isBound(this.serviceIdentifier)) {
-                currentServices.push(
-                    ...this.container.getAll(this.serviceIdentifier)
-                );
-            }
-            this.services = currentServices;
-        }
         return this.services;
     }
 }
 
-export type Bindable = interfaces.Bind | interfaces.Container;
+export function bindMultiInjectProvider(bindable: Bind | Container, id: ServiceIdentifier): void {
+    const bindFn: Bind = typeof bindable === "function"
+        ? bindable
+        : bindable.bind.bind(bindable);
 
-export function bindMultiInjectProvider(bindable: Bindable, id: symbol): void {
-    const isContainer = typeof bindable !== "function"
-      && ("guid" in bindable || "parent" in bindable);
-    let bindingToSyntax;
-    if (isContainer) {
-        bindingToSyntax = (bindable as Container).bind(MultiInjectProvider);
-    }
-    else {
-        bindingToSyntax = (bindable as interfaces.Bind)(MultiInjectProvider);
-    }
-    bindingToSyntax
-        .toDynamicValue(
-            (ctx) => new DefaultMultiInjectProvider(id, ctx.container)
-        )
+    bindFn(MultiInjectProvider)
+        .toDynamicValue((ctx) => {
+            try {
+                return new DefaultMultiInjectProvider(ctx.getAll(id) as NonPrimitive[]);
+            }
+            catch {
+                return new DefaultMultiInjectProvider([]);
+            }
+        })
         .inSingletonScope()
-        .whenTargetNamed(id);
+        .whenNamed(id as symbol);
 }

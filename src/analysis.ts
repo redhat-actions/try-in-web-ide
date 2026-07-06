@@ -1,5 +1,5 @@
 import { inject, injectable, named } from "inversify";
-import { Context } from "@actions/github/lib/context";
+import * as github from "@actions/github";
 import { Handler } from "./api/handler";
 import { MultiInjectProvider } from "./api/multi-inject-provider";
 
@@ -9,8 +9,8 @@ export class Analysis {
     @named(Handler)
     protected readonly handlers: MultiInjectProvider<Handler>;
 
-    async analyze(context: Context): Promise<void> {
-        for await (const handler of this.handlers.getAll()) {
+    async analyze(context: typeof github.context): Promise<void> {
+        for (const handler of this.handlers.getAll()) {
             if (handler.supports(context.eventName)) {
                 await handler.handle(context.eventName, context.payload);
             }
