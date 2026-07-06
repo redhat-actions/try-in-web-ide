@@ -33,7 +33,6 @@ export class HandlePullRequestLogic implements Logic {
     @inject(UpdateCommentHelper)
     private readonly updateCommentHelper: UpdateCommentHelper;
 
-    // Add the given milestone
     @postConstruct()
     public setup(): void {
         const callback = async (
