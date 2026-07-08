@@ -1,0 +1,19 @@
+name: Integration Test
+on:
+  pull_request_target:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-22.04
+    name: Run action on PR
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Try in Web IDE
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          add_comment: 'true'
+          add_status: 'true'

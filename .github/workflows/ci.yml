@@ -7,6 +7,15 @@ on:
     - cron: '0 0 * * *'  # every day at midnight
 
 jobs:
+  typecheck:
+    name: Run TypeScript compiler
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - run: npm ci
+      - run: npx tsc --noEmit
+
   lint:
     name: Run ESLint
     runs-on: ubuntu-22.04
