@@ -1,4 +1,4 @@
-name: Vulnerability Scan with CRDA
+name: Vulnerability Scan
 on:
   push:
   workflow_dispatch:
@@ -8,11 +8,11 @@ on:
     - cron: '0 0 * * *'  # every day at midnight
 
 jobs:
-  crda-scan:
+  npm-audit:
     runs-on: ubuntu-22.04
-    name: Scan project vulnerability with CRDA
-    steps:
+    name: Scan project vulnerabilities with npm audit
 
+    steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Setup Node
@@ -20,16 +20,8 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install CRDA
-        uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 # v1
-        with:
-          source: github
-          github_pat: ${{ github.token }}
-          crda: "latest"
+      - name: Install dependencies
+        run: npm ci
 
-      - name: CRDA Scan
-        id: scan
-        uses: redhat-actions/crda@6310ee94a6ac8f76b4152b7267c6cd7f1277052c # v1
-        with:
-          crda_key: ${{ secrets.CRDA_KEY }}
-          fail_on: never
+      - name: Run npm audit
+        run: npm audit --omit=dev
