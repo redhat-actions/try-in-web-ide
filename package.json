@@ -44,7 +44,7 @@
         "@redhat-actions/action-io-generator": "^1.5.0",
         "@types/fs-extra": "^11.0.4",
         "@types/jest": "^30.0.0",
-        "@types/node": "^22",
+        "@types/node": "^26",
         "@vercel/ncc": "^0.44.1",
         "eslint": "^10.8.0",
         "eslint-plugin-jest": "^29.16.0",
