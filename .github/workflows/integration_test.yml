@@ -3,13 +3,25 @@ on:
   pull_request_target:
     types: [ opened, synchronize, reopened ]
 
+# pull_request_target runs with write access on the base branch.
+# Scope permissions to the minimum needed: write PR comments and statuses.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   integration-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: Run action on PR
+    permissions:
+      contents: read
+      pull-requests: write
+      statuses: write
 
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Try in Web IDE
         uses: ./
