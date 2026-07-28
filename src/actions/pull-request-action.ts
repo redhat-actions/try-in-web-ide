@@ -24,7 +24,6 @@ export class PullRequestAction implements PullRequestListener {
             if (!this.pullRequestCallbacks.has(eventName)) {
                 this.pullRequestCallbacks.set(eventName, []);
             }
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             this.pullRequestCallbacks.get(eventName)!.push(callback);
         });
     }

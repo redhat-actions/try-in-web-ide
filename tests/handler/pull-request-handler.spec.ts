@@ -68,7 +68,7 @@ describe("Test PullRequestHandler", () => {
             )
         );
         prHandler.handle("pull_request", json);
-        expect(listener.execute).toBeCalled();
+        expect(listener.execute).toHaveBeenCalled();
     });
 
     test("test call several listeners", async () => {
@@ -97,7 +97,7 @@ describe("Test PullRequestHandler", () => {
         expect(prHandler["pullRequestListeners"].getAll().length).toEqual(2);
 
         // each listener being invoked
-        expect(listener.execute).toBeCalled();
-        expect(anotherListener.execute).toBeCalled();
+        expect(listener.execute).toHaveBeenCalled();
+        expect(anotherListener.execute).toHaveBeenCalled();
     });
 });

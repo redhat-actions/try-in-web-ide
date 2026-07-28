@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
 
 import * as core from "@actions/core";
@@ -18,21 +17,19 @@ describe("Test Main", () => {
         await expect(main.start()).rejects.toThrow(
             "No GitHub Token provided (github_token)"
         );
-        expect(core.setFailed).toBeCalledTimes(0);
+        expect(core.setFailed).toHaveBeenCalledTimes(0);
     });
 
     test("test with token and no options", async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (core as any).__setInput(Inputs.GITHUB_TOKEN, "foo");
 
         jest.mock("../src/inversify-binding");
         const main = new Main();
         await main.start();
-        expect(core.setFailed).toBeCalledTimes(0);
+        expect(core.setFailed).toHaveBeenCalledTimes(0);
     });
 
     test("test with token and all options", async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (core as any).__setInput(Inputs.GITHUB_TOKEN, "foo");
         (core as any).__setInput(Inputs.ADD_STATUS, "true");
         (core as any).__setInput(Inputs.ADD_COMMENT, "true");
@@ -41,6 +38,6 @@ describe("Test Main", () => {
         jest.mock("../src/inversify-binding");
         const main = new Main();
         await main.start();
-        expect(core.setFailed).toBeCalledTimes(0);
+        expect(core.setFailed).toHaveBeenCalledTimes(0);
     });
 });

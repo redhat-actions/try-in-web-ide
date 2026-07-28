@@ -26,7 +26,6 @@ describe("Test Analysis", () => {
 
         const eventName1 = "eventName1";
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const context1: any = {
             eventName: eventName1,
             payload: jest.fn(),
@@ -35,8 +34,8 @@ describe("Test Analysis", () => {
         const analysis = container.get(Analysis);
         await analysis.analyze(context1);
 
-        expect(handler1.supports).toBeCalled();
-        expect(handler1.handle).toBeCalled();
+        expect(handler1.supports).toHaveBeenCalled();
+        expect(handler1.handle).toHaveBeenCalled();
         const call = (handler1.handle as jest.Mock).mock.calls[0];
 
         expect(call[0]).toEqual(eventName1);
@@ -55,7 +54,6 @@ describe("Test Analysis", () => {
 
         const eventName1 = "eventName1";
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const context1: any = {
             eventName: eventName1,
             payload: jest.fn(),
@@ -64,7 +62,7 @@ describe("Test Analysis", () => {
         const analysis = container.get(Analysis);
         await analysis.analyze(context1);
 
-        expect(handler1.supports).toBeCalled();
+        expect(handler1.supports).toHaveBeenCalled();
         expect(handler1.handle).toHaveBeenCalledTimes(0);
     });
 });
