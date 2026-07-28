@@ -12,7 +12,7 @@ The following devfile tasks or npm commands can be used to perform common develo
 | Run tests                                 | `npm run test`                                               |
 | Update GitHub action's inputs and outputs | `npx action-io-generator -o src/generated/inputs-outputs.ts` |
 
-## Upating the GitHub action's inputs and outputs
+## Updating the GitHub action's inputs and outputs
 After updating the inputs or outputs in the `try-in-web-ide/action.yml` file, run the `Update GitHub action's inputs and outputs` task to generate the corresponding Typescript definition in `src/generated`.
 
 ## Running new changes of the GitHub action within GitHub 
@@ -35,10 +35,10 @@ on:
 
 jobs:
   add-link:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: "Checkout source code"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: Eclipse Che Pull Request Link
         id: che-pr-check-gh-action
         uses: <your-gh-username>/try-in-web-ide@<your-branch>
