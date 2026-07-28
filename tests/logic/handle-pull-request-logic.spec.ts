@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
 
 import * as fs from "fs-extra";
@@ -82,7 +81,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             handlePullRequestLogic.setup();
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -96,8 +95,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalledTimes(0);
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalledTimes(0);
+            expect(addCommentHelper.addComment).toHaveBeenCalledTimes(0);
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalledTimes(0);
         });
 
         test("comment true, status false, setupRemotes false", async () => {
@@ -109,7 +108,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             (configuration.addComment as jest.Mock).mockReturnValue(true);
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -123,7 +122,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalled();
+            expect(addCommentHelper.addComment).toHaveBeenCalled();
             const addCommentCall = (addCommentHelper.addComment as jest.Mock).mock
                 .calls[0];
             expect(addCommentCall[0]).toMatch(
@@ -131,7 +130,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
             expect(addCommentCall[1]).toBe(payload);
 
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalledTimes(0);
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalledTimes(0);
         });
 
         test("do not add comment if existing comment is updated", async () => {
@@ -146,7 +145,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             (updateCommentHelper.updateComment as jest.Mock).mockReturnValue(true);
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -160,7 +159,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalledTimes(0);
+            expect(addCommentHelper.addComment).toHaveBeenCalledTimes(0);
         });
 
         test("do not try to update comment if addComment if false", async () => {
@@ -172,7 +171,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             (configuration.addComment as jest.Mock).mockReturnValue(false);
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -186,7 +185,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(updateCommentHelper.updateComment).toBeCalledTimes(0);
+            expect(updateCommentHelper.updateComment).toHaveBeenCalledTimes(0);
         });
         test("comment false, status true, setupRemotes false", async () => {
             const handlePullRequestLogic = container.get(HandlePullRequestLogic);
@@ -200,7 +199,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -214,8 +213,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalledTimes(0);
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+            expect(addCommentHelper.addComment).toHaveBeenCalledTimes(0);
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalled();
             const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
                 .mock.calls[0];
             expect(addStatusCall[0]).toMatch(
@@ -243,7 +242,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             (configuration.addComment as jest.Mock).mockReturnValue(true);
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -257,8 +256,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalled();
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+            expect(addCommentHelper.addComment).toHaveBeenCalled();
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalled();
             const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
                 .mock.calls[0];
             expect(addStatusCall[0]).toMatch(
@@ -292,7 +291,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -306,8 +305,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalledTimes(0);
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+            expect(addCommentHelper.addComment).toHaveBeenCalledTimes(0);
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalled();
             const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
                 .mock.calls[0];
             expect(addStatusCall[0]).toMatch(
@@ -346,7 +345,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -360,8 +359,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalledTimes(0);
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+            expect(addCommentHelper.addComment).toHaveBeenCalledTimes(0);
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalled();
             const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
                 .mock.calls[0];
             expect(addStatusCall[0]).toMatch(
@@ -387,7 +386,7 @@ describe("Test Logic HandlePullRequestLogic", () => {
             );
 
             // check
-            expect(pullRequestAction.registerCallback).toBeCalled();
+            expect(pullRequestAction.registerCallback).toHaveBeenCalled();
             const registerCallbackCall = (pullRequestAction as any).registerCallback
                 .mock.calls[0];
 
@@ -401,8 +400,8 @@ describe("Test Logic HandlePullRequestLogic", () => {
             // call the callback
             await callback(payload);
 
-            expect(addCommentHelper.addComment).toBeCalledTimes(0);
-            expect(addStatusCheckHelper.addStatusCheck).toBeCalled();
+            expect(addCommentHelper.addComment).toHaveBeenCalledTimes(0);
+            expect(addStatusCheckHelper.addStatusCheck).toHaveBeenCalled();
             const addStatusCall = (addStatusCheckHelper.addStatusCheck as jest.Mock)
                 .mock.calls[0];
             expect(addStatusCall[0]).toMatch(

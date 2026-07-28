@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
 
 import * as fs from "fs-extra";
@@ -46,7 +45,7 @@ describe("Test Action PullRequestAction", () => {
         );
 
         await pullRequestAction.execute(payload);
-        expect(fooMock.dummyCall).toBeCalledTimes(0);
+        expect(fooMock.dummyCall).toHaveBeenCalledTimes(0);
         expect(receivedPayload).toBeUndefined();
     });
 
