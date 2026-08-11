@@ -40,7 +40,7 @@ export class UpdateCommentHelper {
             }
 
             await this.updateCommentById(
-                comment.id,
+                Number(comment.id),
                 newComment,
                 payload
             );
@@ -96,12 +96,11 @@ export class UpdateCommentHelper {
         comment: string,
         payload: PullRequestPayload
     ): Promise<RestEndpointMethodTypes["issues"]["updateComment"]["response"]> {
-        const updateCommentParams: RestEndpointMethodTypes["issues"]["updateComment"]["parameters"] = {
+        return this.octokit.rest.issues.updateComment({
             comment_id: commentId,
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
             body: comment,
-        };
-        return this.octokit.rest.issues.updateComment(updateCommentParams);
+        });
     }
 }
