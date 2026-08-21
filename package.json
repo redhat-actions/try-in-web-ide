@@ -52,7 +52,7 @@
         "@types/node": "^26",
         "@vercel/ncc": "^0.44.1",
         "eslint": "^10.8.0",
-        "eslint-plugin-jest": "^29.16.0",
+        "eslint-plugin-jest": "^29.16.1",
         "fs-extra": "^11.4.0",
         "jest": "^30.4.2",
         "ts-jest": "^29.4.0",
